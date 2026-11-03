@@ -1,78 +1,74 @@
-# Privacy Policy
+# 页序 PDF 隐私与联网说明
 
-**Effective date:** October 30, 2026
-**App:** ClearPDF (Android)
-**Developer:** Chethan ("we", "us", "our") — contact: chethankrishna2022@gmail.com
+**生效日期：**2026 年 11 月 3 日
 
-This Privacy Policy explains how ClearPDF handles information when you use the app, and applies to every distribution of ClearPDF (Google Play, GitHub releases, F-Droid, and any other channel we publish to). ClearPDF is offered to users worldwide, in every country where it's available for download. This is a plain-English policy written to be accurate about a genuinely offline-first app; it is not a substitute for independent legal advice.
+**应用：**页序 PDF（YeXuPDF）
 
-## Summary
+**维护者：**GitHub [@zxl13939888272-hub](https://github.com/zxl13939888272-hub)
 
-ClearPDF has no account system, no in-app advertising, no analytics SDK, and no crash-reporting service in the app's own code. Your documents are processed on your device. We do not operate a server that receives your files, your extracted text, or your document contents. A small number of features make network requests, described below, and none of them send your documents to us.
+本文描述当前源码的实际行为。页序 PDF 正在开发中；每次新增联网能力时，必须同时更新本文和隐私边界测试。
 
-## Information we collect
+## 结论
 
-**We do not collect personal information ourselves.** ClearPDF has no sign-up, no user profile, and no ClearPDF-operated backend. We do not know who you are, and nothing you open or create in the app is transmitted to us.
+页序 PDF 没有账号系统、广告、分析统计、崩溃上报或由维护者运营的文档上传服务器。PDF、图片、OCR 文字、签名和 Office 文档内容默认在 Android 设备本地处理。
 
-Information that stays entirely on your device includes:
+应用是否拥有联网权限取决于构建变体。拥有联网权限不等于上传文档；当前允许的联网入口只有下文列出的用户主动操作。
 
-- The documents, images, and files you open, edit, or create.
-- Recent-file entries (name, size, last position), stored locally so you can resume reading. You can remove these from the home screen at any time, and they are deleted when you uninstall the app or clear its storage.
-- App preferences (theme, Liquid Glass style, motion settings, language, etc.), stored locally.
+## 留在设备上的数据
 
-## How network access is used
+- 用户打开、编辑、扫描和生成的文件。
+- OCR 结果、批注、签名、表单内容和临时渲染文件。
+- 最近文件记录、阅读位置和应用设置。
+- 为崩溃恢复而创建的本地工作副本。
 
-ClearPDF's main app does not declare the `INTERNET` permission; only the specific features below make network requests, and only when you use them:
+这些数据保存在用户选择的位置或应用沙盒中。清除应用数据或卸载应用会删除沙盒内数据，但不会删除用户另行保存到公共目录的文件。
 
-- **Optional Office engine.** You can choose, in Settings, to download a LibreOffice-based rendering engine. On GitHub/F-Droid builds this is fetched from a pinned GitHub release and checked against an expected file size and SHA-256 hash before installing. On the Play build it is delivered through Google Play's on-demand feature delivery. The engine converts documents locally, in an isolated process on your device; no document content is sent anywhere during this.
-- **Web address to PDF.** If you enter a web address to convert to PDF (GitHub/F-Droid builds only), ClearPDF requests that address and its page resources, the same way a browser would. This request goes to the site you chose — not to any ClearPDF-operated server.
-- **Google Play services.** Paper scanning uses Google ML Kit Document Scanner, provided by Google Play services. Automatic background removal in the image editor uses ML Kit subject segmentation, whose model may be delivered by Google Play services. These run through Google's components under Google's own terms (see "Third-party services" below); ClearPDF does not separately collect what passes through them.
-- **App updates and, on the Play Store build, purchases.** Google Play itself contacts Google's servers to check for updates and, if you buy anything in the app, to process that purchase. See "Payments" below.
+## 允许的联网场景
 
-Everything else — reading and annotating PDFs, OCR, spreadsheet editing, image editing, local DOCX/HTML rendering, PDF creation from local content — works entirely offline and does not touch the network. The WebViews used for local HTML and DOCX rendering block external network loads.
+### 1. 用户输入网址并转换为 PDF
 
-## Third-party services
+`foss` 和 `fdroid` 变体申请 `INTERNET` 权限。只有当用户选择“网址转 PDF”并提交网址时，内置 WebView 才会访问该网站及网页引用的资源。目标网站可能看到普通网络请求所包含的 IP 地址、请求头和 Cookie；请求不会发送给页序 PDF 维护者。
 
-ClearPDF uses the following third-party components, each under its own privacy terms:
+不要在此功能中打开不可信网站，也不要输入包含私人令牌的网址。
 
-- **Google Play Services / ML Kit** (document scanning, OCR fallback delivery, subject segmentation) — see [Google's Privacy Policy](https://policies.google.com/privacy) and the [ML Kit Terms of Service](https://developers.google.com/ml-kit/terms).
-- **Google Play Store** (distribution, updates, and — on the Play build — in-app purchases) — see [Google Play's Terms of Service](https://play.google/play-terms/) and, if applicable, [Google Payments' Privacy Notice](https://payments.google.com/payments/apis-secure/get_legal_document?ldo=0&ldt=privacynotice).
-- **GitHub** (hosting the optional Office engine download and the app's source code, for GitHub/F-Droid builds) — see [GitHub's Privacy Statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement).
+### 2. 可选 Office 引擎下载
 
-We do not sell your information, because we never receive it in the first place.
+`foss` 变体允许用户在设置中主动下载 LibreOffice 精简引擎。当前上游地址位于 GitHub Release。下载内容使用固定文件大小和 SHA-256 校验，通过后才会安装。下载请求不包含用户文档，文档转换仍在独立的本地进程完成。
 
-## Permissions
+`fdroid` 变体当前不提供该下载入口。适合国内网络的下载源和离线导入将在后续版本实现。
 
-Android permissions (camera for scanning, storage/photo access for opening and saving files, etc.) are requested only when a feature that needs them is used, and availability can vary by device and Android version. You can review and revoke permissions at any time in Android Settings → Apps → ClearPDF → Permissions.
+### 3. Google 组件
 
-## Payments (Play Store build only)
+`play` 与当前 `foss` 对照变体包含 Google ML Kit 的扫描或图像分割组件，Google Play 服务可能下载组件模型。目标无 GMS 版本不依赖这些组件。
 
-If you purchase anything in ClearPDF through the Google Play Store, that purchase is processed entirely by Google Play Billing. We do not receive or store your payment card details; Google handles billing, receipts, and refunds under its own [refund policy](https://support.google.com/googleplay/answer/2479637). We only learn that an entitlement was purchased, not your payment information.
+## 明确禁止的行为
 
-## Children's privacy
+- 不得把用户选择的文档、图片、OCR 文本或签名上传到服务器。
+- 不得静默加入分析、广告、设备指纹或远程日志 SDK。
+- 不得让用于本地 DOCX/HTML 渲染的 WebView 加载外部资源。
+- 新增网络客户端或网络权限必须通过代码审查，并更新允许列表和本文。
 
-ClearPDF is not directed at children under 13 (or the equivalent minimum age in your country), and we do not knowingly collect personal information from anyone, including children, because we do not collect personal information from any user. If you believe a child has provided us personal information, contact us at the address below and we will look into it — though as described above, there is normally nothing for us to hold.
+本地 HTML 与 DOCX 渲染同时使用 `blockNetworkLoads` 和请求拦截器阻断外部请求。
 
-## Your rights
+## Android 权限
 
-Because ClearPDF doesn't collect or store personal information on a server, there is generally nothing held by us to access, correct, export, or delete under regulations such as the GDPR or CCPA. Data that exists — your documents, recent-file entries, and preferences — lives on your device under your control: delete it by removing the recent entry, clearing the app's storage, or uninstalling the app.
+- `CAMERA`：扫描纸质文档时使用。
+- 存储相关兼容权限：仅用于旧版 Android 上打开和保存用户选择的文件；新版本主要使用系统文件选择器。
+- `INTERNET`、`ACCESS_NETWORK_STATE`：仅存在于需要上述用户主动联网功能的变体。
+- 通知和前台服务：`foss` 下载大型可选 Office 引擎时显示进度和取消操作。
 
-## Data retention
+页序 PDF 不需要电话状态或设备身份权限；构建清单会显式移除依赖库可能隐式加入的 `READ_PHONE_STATE`。
 
-We do not retain your data because we do not receive it. On-device data persists until you remove it or uninstall the app.
+## 用户主动分享
 
-## Security
+当用户点击分享、用其他应用打开文件或打开外部链接时，Android 会把所选内容交给用户选择的目标应用。之后的数据处理受目标应用的隐私政策约束。这不是后台上传。
 
-Document processing happens locally in the app's own sandboxed storage, protected by Android's standard app-sandboxing. No transmission to a ClearPDF server means there is no ClearPDF-side data breach surface for your documents. The optional Office engine download is integrity-checked (SHA-256) before use.
+## 安全说明
 
-## Changes to this policy
+Android 应用沙盒保护本地工作文件。可选组件在使用前进行完整性校验，但任何复杂文档解析器都可能存在安全缺陷；请及时安装更新，并谨慎打开来源不明的文件。
 
-We may update this policy as the app changes — for example, if a new feature adds a network call. We'll update the effective date above and, for material changes, note them in the app's release notes. Continued use of the app after an update means you accept the revised policy.
+## 联系方式
 
-## Contact us
+普通问题请使用未来 YeXuPDF 仓库的 Issue；安全漏洞应使用 GitHub 私密漏洞报告，不要在公开 Issue 中附带私人文件或敏感信息。
 
-Questions about this policy, or a privacy concern: chethankrishna2022@gmail.com. For a security vulnerability specifically, use the private reporting path in [SECURITY.md](SECURITY.md) instead of a public issue.
-
----
-
-See also: [Terms of Service](TERMS.md) · [Third-party notices](THIRD_PARTY_NOTICES.md) · [Security policy](SECURITY.md)
+项目许可证和第三方组件声明见 [LICENSE](LICENSE) 与 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

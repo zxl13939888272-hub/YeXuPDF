@@ -1,4 +1,4 @@
-# ClearPDF design system
+# YeXuPDF design system
 
 **Read this before you build or change any UI.** It applies to every contributor and every AI agent.
 The target is Apple's iOS 26/27 *Liquid Glass*, built on Android with kyant's `backdrop` library
@@ -12,7 +12,7 @@ better than Adobe Acrobat: minimal, compact, playful, smooth, and lag-free.
 1. **No lag.** 60/120 fps while scrolling, switching tabs and animating. A beautiful effect that drops
    frames is a bug. Measure on a real device before you call something done.
 2. **One material.** Every surface is the same liquid glass, the material the title chips use
-   (`GlassTitlePill`, e.g. "ClearPDF" on Home and "Settings" on Settings). Never introduce a flat card,
+   (`GlassTitlePill`, e.g. "YeXuPDF" on Home and "Settings" on Settings). Never introduce a flat card,
    a Material surface, a ripple or a grey slab.
 3. **Minimal and compact.** Show less, but make it obvious. Don't nest panels inside panels. Prefer one
    glass panel holding rows over many small cards.

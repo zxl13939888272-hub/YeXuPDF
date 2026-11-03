@@ -24,7 +24,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ClearPDF"
+rootProject.name = "YeXuPDF"
 include(":backdrop")
 include(":pdf-core")
 include(":ocr-core")

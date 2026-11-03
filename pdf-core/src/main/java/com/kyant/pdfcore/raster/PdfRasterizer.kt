@@ -112,7 +112,7 @@ object PdfRasterizer {
     }
 
     /** Persist all rendered pages to the shared Pictures collection via MediaStore. */
-    fun exportToGallery(context: Context, pages: List<RasterPage>, format: ImageFormat, albumName: String = "ClearPDF"): Int {
+    fun exportToGallery(context: Context, pages: List<RasterPage>, format: ImageFormat, albumName: String = "YeXuPDF"): Int {
         var saved = 0
         val resolver = context.contentResolver
         pages.forEach { page ->

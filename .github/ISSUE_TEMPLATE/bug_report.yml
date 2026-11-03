@@ -1,16 +1,16 @@
 name: Bug report
-description: Report a reproducible problem in ClearPDF.
+description: Report a reproducible problem in YeXuPDF.
 title: "[Bug]: "
 labels: [bug]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping improve ClearPDF. Please remove private document content, personal data, and access tokens from screenshots or logs.
+        Thanks for helping improve YeXuPDF. Please remove private document content, personal data, and access tokens from screenshots or logs.
   - type: input
     id: version
     attributes:
-      label: ClearPDF version
+      label: YeXuPDF version
       description: Find this in Settings → About, or on the release page.
       placeholder: "2.0.0 (V4)"
     validations:
@@ -18,7 +18,7 @@ body:
   - type: dropdown
     id: distribution
     attributes:
-      label: Where did you install ClearPDF from?
+      label: Where did you install YeXuPDF from?
       options:
         - GitHub release APK
         - Google Play

@@ -14,6 +14,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <!-- Legacy write access for pre-scoped-storage devices only. -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+    <!-- Some legacy libraries can make manifest merger add this implicitly. YeXuPDF never reads
+         device or telephone identity, so remove it from every distribution. -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <!-- ML Kit subject segmentation (image editor → auto background removal) declares minSdk 24.
          The app stays on 23; BackgroundRemover gates the call at runtime (API < 24 → unavailable). -->
@@ -36,7 +39,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ClearPDF"
+        android:theme="@style/Theme.YeXuPDF"
         android:localeConfig="@xml/locales_config"
         tools:targetApi="33">
         <!-- A document opened from another app gets its own window (task + Recents entry);

@@ -31,7 +31,7 @@ plugins {
 }
 
 android {
-    namespace = "com.chethan616.clearpdf.office_engine"
+    namespace = "io.github.zxl13939888272hub.yexupdf.office_engine"
     compileSdk = 36
 
     defaultConfig {

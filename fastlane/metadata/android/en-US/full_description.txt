@@ -1,4 +1,4 @@
-<p><b>ClearPDF</b> is a free, open-source PDF reader and editor for Android with a Liquid Glass interface. Your documents are processed on your device: there are no ads, no accounts and no uploads.</p>
+<p><b>YeXuPDF</b> is a free, open-source PDF reader and editor for Android with a Liquid Glass interface. Your documents are processed on your device: there are no ads, no accounts and no uploads.</p>
 
 <p><b>Read and edit PDFs</b></p>
 <ul>
@@ -29,4 +29,4 @@
 <li>Haptics you can switch off; English, Spanish, Italian, Portuguese and Russian</li>
 </ul>
 
-<p>Files opened from other apps open in their own ClearPDF window. The only network use is converting a web address you enter to PDF.</p>
+<p>Files opened from other apps open in their own YeXuPDF window. The only network use is converting a web address you enter to PDF.</p>

@@ -1,4 +1,9 @@
-ClearPDF NOTICE
+YeXuPDF NOTICE
+
+YeXuPDF is derived from ClearPDF by Chethan616 under the MIT License.
+Upstream: https://github.com/Chethan616/ClearPDF
+The original ClearPDF copyright and attribution are retained in LICENSE, source comments,
+and THIRD_PARTY_NOTICES.md. The notes below describe components inherited from ClearPDF.
 
 This project includes and adapts components from AndroidLiquidGlass by kyant0.
 Source: https://github.com/Kyant0/AndroidLiquidGlass

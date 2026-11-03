@@ -19,10 +19,10 @@ fun signingValue(key: String, envKey: String): String? {
     return fromProperties ?: fromEnv
 }
 
-val releaseStoreFilePath = signingValue("storeFile", "CLEARPDF_UPLOAD_STORE_FILE")
-val releaseStorePassword = signingValue("storePassword", "CLEARPDF_UPLOAD_STORE_PASSWORD")
-val releaseKeyAlias = signingValue("keyAlias", "CLEARPDF_UPLOAD_KEY_ALIAS")
-val releaseKeyPassword = signingValue("keyPassword", "CLEARPDF_UPLOAD_KEY_PASSWORD")
+val releaseStoreFilePath = signingValue("storeFile", "YEXUPDF_UPLOAD_STORE_FILE")
+val releaseStorePassword = signingValue("storePassword", "YEXUPDF_UPLOAD_STORE_PASSWORD")
+val releaseKeyAlias = signingValue("keyAlias", "YEXUPDF_UPLOAD_KEY_ALIAS")
+val releaseKeyPassword = signingValue("keyPassword", "YEXUPDF_UPLOAD_KEY_PASSWORD")
 
 // F-Droid builds one APK per CPU (its recipe passes -PfdroidAbi=<abi>, one build block each). Every
 // APK keeps only that ABI's native libraries and gets its own versionCode, 10 x versionCode + n, in
@@ -36,17 +36,17 @@ val hasReleaseSigning = !releaseStoreFilePath.isNullOrBlank() &&
     !releaseKeyPassword.isNullOrBlank()
 
 android {
-    namespace = "com.chethan616.clearpdf"
+    namespace = "io.github.zxl13939888272hub.yexupdf"
     compileSdk = 36
     buildToolsVersion = "36.1.0"
 
     defaultConfig {
-        applicationId = "com.chethan616.clearpdf"
+        applicationId = "io.github.zxl13939888272hub.yexupdf"
         minSdk = 23
         targetSdk = 36
         // Keep this a literal: F-Droid's update checker reads it from this file.
-        versionCode = 9
-        versionName = "2.2.2"
+        versionCode = 1
+        versionName = "0.1.0"
         // Keep every locale declared by the app. Filtering this to English
         // removes values-pt-rBR from the packaged APK, so the language picker
         // can appear to work while the app continues to resolve English.

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ClearPDF</string>
+    <string name="app_name">YeXuPDF</string>
 
     <!-- App Shortcuts -->
     <string name="shortcut_open_short">Open PDF</string>
@@ -13,7 +13,7 @@
     <string name="shortcut_create_long">Create a new PDF</string>
 
     <!-- Onboarding -->
-    <string name="onboarding_welcome_title">Welcome to ClearPDF</string>
+    <string name="onboarding_welcome_title">Welcome to YeXuPDF</string>
     <string name="onboarding_welcome_subtitle">Your fully offline document companion</string>
     <string name="onboarding_language_title">Choose your language</string>
     <string name="onboarding_language_subtitle">Personalize your experience</string>
@@ -42,7 +42,7 @@
     <string name="settings_replay_onboarding_desc">Replay the welcome tour</string>
 
     <!-- Home Screen -->
-    <string name="home_title">ClearPDF</string>
+    <string name="home_title">YeXuPDF</string>
     <string name="home_workspace_label">PDF WORKSPACE</string>
     <string name="home_tagline">PDF work, simply elegant.</string>
     <string name="home_subtitle">Open, scan, and organize your files &#8212; privately on your device.</string>
@@ -212,9 +212,9 @@
     <string name="settings_language_desc">Choose application language</string>
     <string name="settings_about">About</string>
     <string name="settings_version">Version 1.1.0</string>
-    <string name="settings_made_by">Made by Chethan616 with &#10084;</string>
+    <string name="settings_made_by">Made by xinglou with &#10084;</string>
     <string name="settings_star_github">Star on GitHub</string>
-    <string name="settings_open_source">ClearPDF is open source</string>
+    <string name="settings_open_source">YeXuPDF is open source</string>
     <string name="settings_terms_of_service">Terms of Service</string>
     <string name="settings_licenses">Open Source Licenses</string>
 
@@ -320,7 +320,7 @@
     <string name="feature_tools_title">Powerful Tools</string>
     <string name="feature_tools_desc">Merge, split, compress, and convert</string>
     <string name="onboarding_ready_title">You\'re all set! &#127881;</string>
-    <string name="onboarding_ready_subtitle">ClearPDF is ready to use.\nAll your documents, always private.</string>
+    <string name="onboarding_ready_subtitle">YeXuPDF is ready to use.\nAll your documents, always private.</string>
     <string name="onboarding_privacy_badge">100% offline &#183; No data collection &#183; Open source</string>
 
     <!-- Common -->
@@ -359,7 +359,7 @@
     <string name="dont_ask_again">Don\'t ask again</string>
     <string name="settings_custom_directory">Custom Directory</string>
     <string name="settings_default_directory">Default Directory</string>
-    <string name="settings_default_path">Downloads / ClearPDF</string>
+    <string name="settings_default_path">Downloads / YeXuPDF</string>
     <string name="settings_change_folder">Change Folder</string>
     <string name="settings_reset">Reset</string>
     <string name="settings_bg_gallery">Gallery</string>
@@ -569,8 +569,8 @@
     <string name="file_type_powerpoint">PowerPoint</string>
     <string name="file_type_images">Images</string>
     <string name="file_type_txt">TXT</string>
-    <string name="star_prompt_title">Support ClearPDF</string>
-    <string name="star_prompt_message">ClearPDF is open source on GitHub.\nWould you like to star the project?</string>
+    <string name="star_prompt_title">Support YeXuPDF</string>
+    <string name="star_prompt_message">YeXuPDF is open source on GitHub.\nWould you like to star the project?</string>
     <string name="star_prompt_accept">Yes, star it</string>
     <string name="star_prompt_later">Not now</string>
     <string name="star_prompt_never">Do not ask again</string>
@@ -846,7 +846,7 @@
     <string name="whats_new_zoom_title">Sharp at any zoom</string>
     <string name="whats_new_zoom_desc">PDFs, Word and PowerPoint files stay crisp when you zoom in.</string>
     <string name="whats_new_window_title">Its own window</string>
-    <string name="whats_new_window_desc">Files opened from WhatsApp or a file manager open in a separate ClearPDF window.</string>
+    <string name="whats_new_window_desc">Files opened from WhatsApp or a file manager open in a separate YeXuPDF window.</string>
     <string name="whats_new_glass_title">Liquid Glass settings</string>
     <string name="whats_new_glass_desc">Tune blur, refraction and tint, or pick a preset.</string>
     <string name="whats_new_share_title">Share in more formats</string>
@@ -865,7 +865,7 @@
     <string name="whats_new_xlsx_title">Spreadsheets as Excel shows them</string>
     <string name="whats_new_xlsx_desc">Pictures and logos appear, text fits its cells, and sheets are white paper with a dark switch.</string>
     <string name="whats_new_lang_title">Arabic, and more of every language</string>
-    <string name="whats_new_lang_desc">ClearPDF now speaks Arabic, and Arabic text copies and searches in the right order.</string>
+    <string name="whats_new_lang_desc">YeXuPDF now speaks Arabic, and Arabic text copies and searches in the right order.</string>
     <string name="whats_new_print_title">Print and pick up where you left off</string>
     <string name="whats_new_print_desc">Print Word documents in their real layout, and reopen them at the page you were reading.</string>
     <string name="whats_new_encrypt_title">AES-256 PDF encryption</string>
@@ -962,8 +962,8 @@
     <string name="ie_mask_star">Star</string>
 
     <!-- Restart for a language that reads the other way -->
-    <string name="restart_title">Restart ClearPDF?</string>
-    <string name="restart_body">This language reads in the other direction. Restart ClearPDF so every screen switches over.</string>
+    <string name="restart_title">Restart YeXuPDF?</string>
+    <string name="restart_body">This language reads in the other direction. Restart YeXuPDF so every screen switches over.</string>
     <string name="restart_now">Restart now</string>
     <string name="restart_later">Later</string>
 

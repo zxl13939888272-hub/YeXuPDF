@@ -1,10 +1,10 @@
-# Contributing to ClearPDF
+# Contributing to YeXuPDF
 
-Thanks for helping improve ClearPDF. Bug reports, usability feedback, documentation fixes, and focused code changes are welcome.
+Thanks for helping improve YeXuPDF. Bug reports, usability feedback, documentation fixes, and focused code changes are welcome.
 
 ## Project principles
 
-- Keep selected documents and extracted content on-device; do not add a ClearPDF upload service.
+- Keep selected documents and extracted content on-device; do not add a YeXuPDF upload service.
 - Make network features explicit, user-initiated, and documented. Keep core PDF workflows usable offline where practical.
 - Prefer small changes with clear user value.
 - Preserve accessibility, light and dark themes, and performance across a range of Android devices.
@@ -27,8 +27,8 @@ Requirements:
 Clone the repository, then build the FOSS debug app:
 
 ~~~bash
-git clone https://github.com/Chethan616/ClearPDF.git
-cd ClearPDF
+git clone https://github.com/zxl13939888272-hub/YeXuPDF.git
+cd YeXuPDF
 ./gradlew :app:assembleFossDebug
 ~~~
 
@@ -58,7 +58,7 @@ Keep the pull request focused. Update docs, notices, or tests when they are affe
 
 ## Reporting bugs
 
-Use the [bug report form](https://github.com/Chethan616/ClearPDF/issues/new?template=bug_report.yml). Include the app version, distribution source, device, Android version, reproduction steps, and expected and actual behavior. Remove personal data and private document content from any logs or screenshots.
+Use the [bug report form](https://github.com/zxl13939888272-hub/YeXuPDF/issues/new?template=bug_report.yml). Include the app version, distribution source, device, Android version, reproduction steps, and expected and actual behavior. Remove personal data and private document content from any logs or screenshots.
 
 ## Code style and conduct
 

@@ -94,7 +94,7 @@ object ImageProcessor {
     }
 
     /** Save a processed file into the shared Pictures/[albumName] collection. */
-    fun saveToGallery(context: Context, file: File, format: ImageFormat, albumName: String = "ClearPDF"): Boolean {
+    fun saveToGallery(context: Context, file: File, format: ImageFormat, albumName: String = "YeXuPDF"): Boolean {
         val resolver = context.contentResolver
         val values = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, file.name)

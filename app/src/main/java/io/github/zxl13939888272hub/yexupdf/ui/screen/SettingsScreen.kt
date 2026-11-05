@@ -1008,7 +1008,7 @@ private class Credit(val name: String, val author: String, val license: String, 
  * Note what is *not* here: the .xlsx reader and the PowerPoint slide renderer are written in this
  * repo against the published OOXML layout, not borrowed. That was a size decision — the libraries
  * that read Office formats properly on Android (POI's OOXML half plus XmlBeans at ~17 MB, or
- * OpenDocument.core's 100 MB AAR) are far more than this app can carry for a viewer. POI appears
+ * OpenDocument.core's 100 MB AAR) are too large for the built-in fallback viewer. POI appears
  * below only for the *legacy* binary .doc/.xls/.ppt formats, which are not XML and cannot be read
  * this way. Word layout is the one place a library won on merit: docx-preview delegates to the
  * browser engine the phone already has, so it costs ~48 KB rather than tens of megabytes.
@@ -1028,7 +1028,9 @@ private val OpenSourceCredits = listOf(
     Credit("ImageToolbox", "T8RIN (Malik Mukhametzyanov)", "Apache License 2.0 — image editor cropper, perspective crop and draw engine (adapted)", "https://github.com/T8RIN/ImageToolbox"),
     Credit("GPUImage for Android", "CyberAgent, Inc.", "Apache License 2.0 — image editor adjustments and filters", "https://github.com/cats-oss/android-gpuimage"),
     Credit("ML Kit Subject Segmentation", "Google", "Google APIs Terms — optional background removal via Play services", "https://developers.google.com/ml-kit/vision/subject-segmentation"),
-    Credit("LibreOffice", "The Document Foundation", "Mozilla Public License 2.0 — optional Office engine (downloaded on request, not bundled)", "https://www.libreoffice.org/about-us/licenses/"),
+    Credit("U²-Net", "Xuebin Qin et al.", "Apache License 2.0 — bundled U2NetP background-removal model", "https://github.com/xuebinqin/U-2-Net"),
+    Credit("ONNX Runtime", "Microsoft", "MIT License — on-device inference in the offline build", "https://github.com/microsoft/onnxruntime"),
+    Credit("LibreOffice", "The Document Foundation", "Mozilla Public License 2.0 — bundled in the offline build; optional in other builds", "https://www.libreoffice.org/about-us/licenses/"),
     Credit("Pdf_Tools", "Karna14314", "PDF viewer zoom/pan reference", "https://github.com/Karna14314/Pdf_Tools")
 )
 

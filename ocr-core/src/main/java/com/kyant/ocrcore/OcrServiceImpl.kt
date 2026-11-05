@@ -8,7 +8,7 @@ import android.util.Log
  * Uses [primary] when the build supplies one (the play / foss builds pass the bundled ML Kit
  * engine: higher real-world accuracy, small footprint) and transparently falls back to the fully
  * open-source Tesseract4Android engine if it fails to initialize or throws during recognition
- * (e.g. on a device whose OEM image is missing pieces ML Kit's TFLite runtime needs). The F-Droid
+ * (e.g. on a device whose OEM image is missing pieces ML Kit's TFLite runtime needs). The offline
  * build passes none and uses Tesseract only. Every engine is 100% on-device.
  */
 class OcrServiceImpl(

@@ -1,6 +1,6 @@
 # Third-party notices
 
-ClearPDF uses open-source components and keeps their notices with the project. Release packaging must preserve the applicable copyright and license text.
+YeXuPDF uses open-source components and keeps their notices with the project. Release packaging must preserve the applicable copyright and license text.
 
 ## Apache PDFBox Android
 
@@ -56,8 +56,6 @@ ClearPDF uses open-source components and keeps their notices with the project. R
 - License: Apache License 2.0
 - Use: informed ClearPDF's on-device tool set (e.g. PDF-to-Images export). ClearPDF's implementations are original code written against the app's own architecture and `backdrop` UI; no source was copied. This acknowledgement is provided in good faith for the shared feature direction.
 
-The app does not bundle GPL or LGPL components for document rendering. If a future dependency changes that, its license and redistribution obligations must be reviewed before release. (The optional LibreOffice engine below is not bundled in the APK; it is installed only on request.)
-
 ## docx-preview (docxjs)
 
 - Artifact: `docx-preview.min.js` 0.4.0, vendored at `app/src/main/assets/docx/`
@@ -105,7 +103,25 @@ The app does not bundle GPL or LGPL components for document rendering. If a futu
 - License: Google APIs Terms of Service
 - Use: optional automatic background removal in the image editor. The model is delivered by
   Google Play services; the call is gated at runtime (Android 7+, Play services present) behind
-  the `BackgroundRemover` interface so FOSS builds can swap or drop it.
+  the `BackgroundRemover` interface. It is not included in the recommended `offline` build.
+
+## U²-Net / U2NetP model
+
+- Project: U-2-Net by Xuebin Qin and contributors (https://github.com/xuebinqin/U-2-Net).
+- License: Apache License 2.0.
+- Use: automatic background removal in the recommended `offline` build. The 4,574,861-byte
+  `u2netp.onnx` model is packaged in the APK and never fetched at runtime.
+- Reviewed artifact source: `ChiangyangNPU/MattingDemo-Android` commit
+  `c59911e4eb0d6f35bec4ab6bc134e8c6a5774e0d`, which redistributes the Apache-2.0 U2NetP weights.
+- SHA-256: `309c8469258dda742793dce0ebea8e6dd393174f89934733ecc8b14c76f4ddd8`.
+
+## ONNX Runtime Android
+
+- Artifact: `com.microsoft.onnxruntime:onnxruntime-android:1.31.1`.
+- Project: https://github.com/microsoft/onnxruntime.
+- License: MIT License.
+- Use: runs U2NetP locally in the recommended `offline` build. It does not upload images or
+  download models.
 
 ## Stack Blur
 
@@ -115,10 +131,10 @@ The app does not bundle GPL or LGPL components for document rendering. If a futu
 ## LibreOffice (optional Office engine)
 
 - What: "Office engine (powered by LibreOffice)" — a prebuilt LibreOfficeKit bundle for Android
-  (`liblo-native-code.so`, `libc++_shared.so` and the LibreOffice runtime tree). It is **not in the
-  APK**. It is installed only when the user asks for it in Settings: the `play` flavor gets it through
-  the on-demand Play Feature Delivery module `:office_engine`, and the `foss` flavor downloads it from
-  a pinned release, accepting it only if its size and SHA-256 match `OfficeEngineManifest.kt`.
+  (`liblo-native-code.so`, `libc++_shared.so` and the LibreOffice runtime tree). The recommended
+  arm64 `offline` APK carries the verified compressed archive and installs it locally on request;
+  the `play` flavor uses Play Feature Delivery, while the `foss` comparison flavor downloads the
+  same pinned release. Every path accepts only the size and SHA-256 in `OfficeEngineManifest.kt`.
 - Binary source: https://github.com/vasuki-re/LibreOffice-Lite (release v2.0), a build of
   LibreOffice core (https://git.libreoffice.org/core, mirror https://github.com/LibreOffice/core).
 - License: Mozilla Public License 2.0 for LibreOffice itself; some bundled parts (fonts such as
@@ -127,10 +143,10 @@ The app does not bundle GPL or LGPL components for document rendering. If a futu
 - Source availability (MPL-2.0 §3.2): the corresponding LibreOffice source is available from the
   URLs above. Anyone redistributing a build that bundles or rehosts the engine must keep that source
   available and should prefer a self-built bundle whose build recipe is published.
-- ClearPDF's Kotlin JNI binding (`app/src/main/java/org/libreoffice/kit/`) is original code; only
+- YeXuPDF's Kotlin JNI binding (`app/src/main/java/org/libreoffice/kit/`) is inherited original code; only
   its package, class and method names follow LibreOffice's Android binding, because the native
   library resolves them by name.
-- Trademark: "LibreOffice" is a trademark of The Document Foundation; ClearPDF uses it only to say
+- Trademark: "LibreOffice" is a trademark of The Document Foundation; YeXuPDF uses it only to say
   the optional engine is powered by LibreOffice and is not affiliated with or endorsed by TDF.
 - Credited in Settings → Licenses and Settings → Office engine.
 

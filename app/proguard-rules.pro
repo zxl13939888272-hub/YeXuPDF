@@ -54,3 +54,5 @@
 # WorkManager (foss Office-engine downloader) instantiates its Room database reflectively at
 # startup; R8 full mode strips the generated no-arg constructor → launch crash. Keep it.
 -keep class * extends androidx.room.RoomDatabase { <init>(); }
+# Required by ONNX Runtime's Java/JNI bridge in R8-minified offline builds.
+-keep class ai.onnxruntime.** { *; }

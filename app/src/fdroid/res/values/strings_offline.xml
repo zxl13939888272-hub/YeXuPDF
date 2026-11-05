@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="office_engine_not_installed">Not installed · ~%1$s local storage</string>
+    <string name="office_engine_install">Install offline component</string>
+    <string name="office_engine_delete_message">Frees %1$s. Office files will open with the built-in renderers. The bundled component can be installed again without a download.</string>
+    <string name="office_engine_hint_sub">Bundled offline component · powered by LibreOffice</string>
+    <string name="ie_bg_unavailable">The bundled background-removal model is unavailable. You can still erase manually.</string>
+</resources>

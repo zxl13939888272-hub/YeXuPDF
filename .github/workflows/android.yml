@@ -24,12 +24,10 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Test local and network-capable variants
-        run: ./gradlew :app:testFdroidDebugUnitTest :app:testFossDebugUnitTest --stacktrace
+        run: ./gradlew :app:testOfflineDebugUnitTest :app:testFossDebugUnitTest --stacktrace
       - name: Build release variants for CI
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        # Three flavors (play, foss, fdroid) compile in one Kotlin daemon; its default 2 GB heap ran
-        # out (GC overhead limit). The runner has 16 GB, so give Gradle and Kotlin 4 GB each.
-        run: ./gradlew assembleRelease --stacktrace -Dorg.gradle.jvmargs="-Xmx4g -Dfile.encoding=UTF-8" -Pkotlin.daemon.jvmargs=-Xmx4g
+        run: ./gradlew :app:assembleOfflineRelease --stacktrace -Dorg.gradle.jvmargs="-Xmx4g -Dfile.encoding=UTF-8" -Pkotlin.daemon.jvmargs=-Xmx4g
 
       - name: Prepare the official upload key
         if: startsWith(github.ref, 'refs/tags/v')
@@ -42,7 +40,7 @@ jobs:
           test -s "$YEXUPDF_UPLOAD_STORE_FILE"
           chmod 600 "$YEXUPDF_UPLOAD_STORE_FILE"
 
-      - name: Build signed FOSS APKs
+      - name: Build signed offline APK
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           YEXUPDF_UPLOAD_STORE_FILE: ${{ runner.temp }}/yexupdf-upload-key.jks
@@ -54,38 +52,32 @@ jobs:
           test -n "$YEXUPDF_UPLOAD_STORE_PASSWORD"
           test -n "$YEXUPDF_UPLOAD_KEY_ALIAS"
           test -n "$YEXUPDF_UPLOAD_KEY_PASSWORD"
-          ./gradlew :app:assembleFossRelease --stacktrace -Dorg.gradle.jvmargs="-Xmx4g -Dfile.encoding=UTF-8" -Pkotlin.daemon.jvmargs=-Xmx4g
+          ./gradlew :app:assembleOfflineRelease --stacktrace -Dorg.gradle.jvmargs="-Xmx4g -Dfile.encoding=UTF-8" -Pkotlin.daemon.jvmargs=-Xmx4g
 
-      - name: Name FOSS APKs for downloads
+      - name: Name offline APK for downloads
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
           set -euo pipefail
           version="$(grep -m1 'versionName = "' app/build.gradle.kts | cut -d '"' -f 2)"
           test -n "$version"
-          shopt -s nullglob
-          apks=(app/build/outputs/apk/foss/release/app-foss-*-release.apk)
-          test "${#apks[@]}" -eq 5
-          for apk in "${apks[@]}"; do
-            abi="${apk#app/build/outputs/apk/foss/release/app-foss-}"
-            abi="${abi%-release.apk}"
-            mv "$apk" "app/build/outputs/apk/foss/release/YeXuPDF-v${version}-${abi}.apk"
-          done
+          apk="app/build/outputs/apk/offline/release/app-offline-release.apk"
+          test -s "$apk"
+          mv "$apk" "app/build/outputs/apk/offline/release/YeXuPDF-v${version}-offline-arm64.apk"
 
       - name: Upload CI APK artifacts
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         uses: actions/upload-artifact@v4
         with:
           name: yexupdf-release-apk
-          # Branch builds include all flavors under apk/<flavor>/release/.
-          path: app/build/outputs/apk/*/release/*.apk
+          path: app/build/outputs/apk/offline/release/*.apk
           if-no-files-found: error
 
-      - name: Upload signed FOSS APK artifacts
+      - name: Upload signed offline APK artifact
         if: startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@v4
         with:
           name: yexupdf-release-apk
-          path: app/build/outputs/apk/foss/release/YeXuPDF-v*.apk
+          path: app/build/outputs/apk/offline/release/YeXuPDF-v*.apk
           if-no-files-found: error
 
   publish:

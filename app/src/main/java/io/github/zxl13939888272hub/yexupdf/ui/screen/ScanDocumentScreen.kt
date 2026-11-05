@@ -148,7 +148,7 @@ fun ScanDocumentScreen(
         label = "scanContentOffsetY"
     )
 
-    // ── Document scanner (Google's in play / foss builds, the camera app in F-Droid) ──
+    // ── Document scanner (Google's in play / foss builds, the camera app in offline) ──
     val startScanner = io.github.zxl13939888272hub.yexupdf.scan.rememberDocumentScanner(
         onPages = { uris -> viewModel.onScanComplete(uris, ScanFilter.ORIGINAL) },
         onFinished = { viewModel.cancelScanning() },

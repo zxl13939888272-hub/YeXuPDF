@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  F-Droid flavor. Network access is used for one user-initiated feature only: converting a web
-  address the user types to PDF. Documents are never uploaded, and no code is downloaded.
+  Offline flavor. The AI model and Office engine are packaged in the APK. Network access is used
+  for one user-initiated feature only: converting a web address the user types to PDF. Documents
+  are never uploaded, and no code or model is downloaded by the installed app.
 -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- The pinned Office archive uses a 256 MiB xz dictionary while it is unpacked once. -->
+    <application android:largeHeap="true">
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            tools:node="remove" />
+    </application>
 </manifest>

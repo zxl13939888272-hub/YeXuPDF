@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="office_engine_not_installed">未安装 · 约占用 %1$s 本地空间</string>
+    <string name="office_engine_install">安装离线组件</string>
+    <string name="office_engine_delete_message">将释放 %1$s。Office 文件会改用内置渲染器；以后可直接从 APK 再次安装，无需下载。</string>
+    <string name="office_engine_hint_sub">APK 内置离线组件 · 由 LibreOffice 提供支持</string>
+    <string name="ie_bg_unavailable">内置背景移除模型不可用，你仍可手动擦除背景。</string>
+</resources>

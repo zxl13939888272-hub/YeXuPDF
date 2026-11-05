@@ -5,6 +5,16 @@ plugins {
 }
 
 import java.util.Properties
+import java.net.HttpURLConnection
+import java.net.URI
+import java.security.MessageDigest
+import org.gradle.api.DefaultTask
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
 
 val keystoreProperties = Properties().apply {
     val file = rootProject.file("key.properties")
@@ -24,16 +34,97 @@ val releaseStorePassword = signingValue("storePassword", "YEXUPDF_UPLOAD_STORE_P
 val releaseKeyAlias = signingValue("keyAlias", "YEXUPDF_UPLOAD_KEY_ALIAS")
 val releaseKeyPassword = signingValue("keyPassword", "YEXUPDF_UPLOAD_KEY_PASSWORD")
 
-// F-Droid builds one APK per CPU (its recipe passes -PfdroidAbi=<abi>, one build block each). Every
-// APK keeps only that ABI's native libraries and gets its own versionCode, 10 x versionCode + n, in
-// the order F-Droid asks for: armeabi-v7a < arm64-v8a < x86 < x86_64.
-val fdroidAbis = listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-val fdroidAbi = (findProperty("fdroidAbi") as String?)?.trim()?.takeIf { it in fdroidAbis }
-
 val hasReleaseSigning = !releaseStoreFilePath.isNullOrBlank() &&
     !releaseStorePassword.isNullOrBlank() &&
     !releaseKeyAlias.isNullOrBlank() &&
     !releaseKeyPassword.isNullOrBlank()
+
+// The recommended offline APK carries the pinned arm64 LibreOfficeKit archive as an asset. The
+// archive is fetched only while building, never by the installed app. Builders in restricted
+// networks can provide the exact verified file with -PofflineOfficeEngineArchive=<path> or the
+// YEXUPDF_OFFICE_ENGINE_ARCHIVE environment variable.
+val offlineOfficeAssetDir = layout.buildDirectory.dir("generated/offlineAssets")
+val offlineOfficeAsset = offlineOfficeAssetDir.map { it.file("office-engine/LibreOffice-arm64.tar.xz") }
+val offlineOfficeLocalArchive = providers.gradleProperty("offlineOfficeEngineArchive")
+    .orElse(providers.environmentVariable("YEXUPDF_OFFICE_ENGINE_ARCHIVE"))
+val offlineOfficeUrl =
+    "https://github.com/vasuki-re/LibreOffice-Lite/releases/download/v2.0/LibreOffice-arm64.tar.xz"
+val offlineOfficeSize = 47_521_152L
+val offlineOfficeSha256 = "6665ad47db41d116248c40e6fc608a3425b9eb4a304f5ad5e5d5c80dbea61e30"
+
+abstract class PrepareOfflineOfficeEngine : DefaultTask() {
+    @get:Input abstract val sourceUrl: Property<String>
+    @get:Input abstract val expectedSize: Property<Long>
+    @get:Input abstract val expectedSha256: Property<String>
+    @get:Input @get:Optional abstract val localArchivePath: Property<String>
+    @get:OutputFile abstract val outputFile: RegularFileProperty
+
+    @TaskAction
+    fun prepare() {
+        val output = outputFile.get().asFile
+        output.parentFile.mkdirs()
+        val temporary = File(output.parentFile, "${output.name}.part")
+        temporary.delete()
+        try {
+            val localPath = localArchivePath.orNull?.trim().orEmpty()
+            if (localPath.isNotEmpty()) {
+                val source = File(localPath)
+                check(source.isFile) { "Offline Office archive not found: $source" }
+                source.copyTo(temporary, overwrite = true)
+            } else {
+                logger.lifecycle("Downloading the pinned Office engine for the offline APK")
+                val connection = URI(sourceUrl.get()).toURL().openConnection() as HttpURLConnection
+                connection.instanceFollowRedirects = true
+                connection.connectTimeout = 20_000
+                connection.readTimeout = 60_000
+                try {
+                    check(connection.responseCode in 200..299) {
+                        "Office engine download failed (HTTP ${connection.responseCode})"
+                    }
+                    connection.inputStream.buffered().use { input ->
+                        temporary.outputStream().buffered().use { outputStream -> input.copyTo(outputStream) }
+                    }
+                } finally {
+                    connection.disconnect()
+                }
+            }
+            check(temporary.length() == expectedSize.get()) { "Office engine size verification failed" }
+            check(sha256(temporary) == expectedSha256.get()) { "Office engine SHA-256 verification failed" }
+            temporary.copyTo(output, overwrite = true)
+        } finally {
+            temporary.delete()
+        }
+    }
+
+    private fun sha256(file: File): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+        file.inputStream().buffered().use { input ->
+            val buffer = ByteArray(1 shl 16)
+            while (true) {
+                val read = input.read(buffer)
+                if (read < 0) break
+                digest.update(buffer, 0, read)
+            }
+        }
+        return digest.digest().joinToString("") { "%02x".format(it) }
+    }
+}
+
+val prepareOfflineOfficeEngine = tasks.register<PrepareOfflineOfficeEngine>("prepareOfflineOfficeEngine") {
+    group = "offline distribution"
+    description = "Prepares the verified LibreOfficeKit archive embedded in the offline APK."
+    sourceUrl.set(offlineOfficeUrl)
+    expectedSize.set(offlineOfficeSize)
+    expectedSha256.set(offlineOfficeSha256)
+    outputFile.set(offlineOfficeAsset)
+    offlineOfficeLocalArchive.orNull?.trim()?.takeIf { it.isNotEmpty() }?.let {
+        localArchivePath.set(rootProject.file(it).absolutePath)
+    }
+}
+
+tasks.matching { it.name.startsWith("preOffline") && it.name.endsWith("Build") }.configureEach {
+    dependsOn(prepareOfflineOfficeEngine)
+}
 
 android {
     namespace = "io.github.zxl13939888272hub.yexupdf"
@@ -44,7 +135,7 @@ android {
         applicationId = "io.github.zxl13939888272hub.yexupdf"
         minSdk = 23
         targetSdk = 36
-        // Keep this a literal: F-Droid's update checker reads it from this file.
+        // Keep these literals so release scripts can read them without evaluating Gradle.
         versionCode = 1
         versionName = "0.1.0"
         // Keep every locale declared by the app. Filtering this to English
@@ -89,47 +180,54 @@ android {
         unitTests.isReturnDefaultValues = true
     }
 
-    // Two distributions of the same app (identical applicationId):
+    // Three distributions of the same app (identical applicationId):
     //  - play: Google Play. The optional Office engine ships as the on-demand dynamic feature
     //    module :office_engine (Play Feature Delivery); no native code is ever downloaded by the app.
-    //  - foss: GitHub/F-Droid-style sideload builds. INTERNET is used for the optional Office
+    //  - foss: GitHub-style sideload builds. INTERNET is used for the optional Office
     //    engine download and the user-entered URL-to-PDF flow; see src/foss/AndroidManifest.xml.
+    //  - offline: recommended no-GMS build. U2NetP and the arm64 LibreOfficeKit engine are
+    //    packaged in the APK, so document and image processing never needs a model download.
     flavorDimensions += "distribution"
     productFlavors {
         create("play") {
             dimension = "distribution"
             // Play Console's automatic app protection (Play Integrity tamper detection) needs
             // minSdk 24+; the app itself works fine down to 23, so this is scoped to the Play
-            // flavor only — GitHub/F-Droid users on Android 6.0 keep working.
+            // flavor only — the legacy foss comparison build can still target Android 6.0.
             minSdk = 24
             // The optional Office engine's prebuilt LibreOffice binaries only cover arm64-v8a and
             // armeabi-v7a (see office_engine/build.gradle.kts's engineBundles — the upstream
             // LibreOffice-Lite project ships no x86/x86_64 build). Google Play Bundles require
             // every feature module with native code to support the exact same ABI set as the base,
             // so the base app's ABI set is narrowed to match here. This only affects the Play
-            // flavor, which is distributed solely as a bundle anyway; foss/fdroid APKs are
+            // flavor, which is distributed solely as a bundle anyway; foss/offline APKs are
             // unaffected and keep all 4 ABIs.
             ndk { abiFilters += setOf("arm64-v8a", "armeabi-v7a") }
         }
         create("foss") {
             dimension = "distribution"
         }
-        // F-Droid: free software only. No Google Play services / ML Kit (the document scanner
-        // falls back to the camera app, OCR to Tesseract, background removal is not offered) and
-        // no downloaded Office engine. Same applicationId, so it updates like the GitHub build.
-        create("fdroid") {
+        // Primary sideload build for mainland China and devices without Google Play services.
+        // The current LibreOfficeKit bundle is arm64-only here; this covers modern Android phones
+        // and avoids making every APK carry two ~47 MB compressed engine archives.
+        create("offline") {
             dimension = "distribution"
-            if (fdroidAbi != null) {
-                versionCode = 10 * (defaultConfig.versionCode ?: 0) + fdroidAbis.indexOf(fdroidAbi) + 1
-                ndk { abiFilters += fdroidAbi }
-            }
+            minSdk = 24
+            ndk { abiFilters += "arm64-v8a" }
         }
     }
-    // Code that needs Google's libraries lives in src/gms, shared by the play and foss builds;
-    // the fdroid build has its own free implementations in src/fdroid.
+    // Code that needs Google services lives in src/gms, shared by play and foss. The offline
+    // build deliberately maps the former fdroid source directory, which contains no GMS code.
     sourceSets {
         getByName("play").kotlin.srcDir("src/gms/java")
         getByName("foss").kotlin.srcDir("src/gms/java")
+        getByName("offline").apply {
+            kotlin.srcDir("src/fdroid/java")
+            manifest.srcFile("src/fdroid/AndroidManifest.xml")
+            res.srcDir("src/fdroid/res")
+            assets.srcDir("src/fdroid/assets")
+            assets.srcDir(offlineOfficeAssetDir.get().asFile)
+        }
     }
     // AGP can't link a dynamic feature against ABI-split APK outputs, and the feature is only
     // ever delivered through a Play bundle anyway — so register it for bundle builds only.
@@ -145,13 +243,13 @@ android {
     // APK builds/installs (`assembleDebug`/`assembleRelease`, `installDebug`, sideloading).
     splits {
         abi {
-            // F-Droid builds and signs one APK per version itself, so its builds skip the split.
+            // The offline build is deliberately arm64-only, so it skips the generic four-ABI split.
             // Bundle tasks need no split either — see the comment above — and leaving it enabled
             // there corrupted :office_engine's resource-linking variant lookup for bundlePlayRelease
             // ("Cannot find PROCESSED_RES output"), since AGP's dynamic-feature resource linker
             // expects the base app's split config to match what it actually produces for a bundle.
             isEnable = gradle.startParameter.taskNames.none {
-                it.contains("fdroid", ignoreCase = true) || it.contains("bundle", ignoreCase = true)
+                it.contains("offline", ignoreCase = true) || it.contains("bundle", ignoreCase = true)
             }
             reset()
             include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
@@ -198,7 +296,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     implementation(libs.androidx.core.ktx)
     // Per-app language (LocaleHelper). Declared directly: the play / foss builds used to get it
-    // only transitively through Google's libraries, which the F-Droid build doesn't have.
+    // only transitively through Google's libraries, which the offline build doesn't have.
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.foundation)
@@ -251,4 +349,6 @@ dependencies {
     "playImplementation"(libs.play.feature.delivery.ktx)
     "fossImplementation"(libs.androidx.work.runtime.ktx)
     "fossImplementation"(libs.xz)
+    "offlineImplementation"(libs.xz)
+    "offlineImplementation"(libs.onnxruntime.android)
 }

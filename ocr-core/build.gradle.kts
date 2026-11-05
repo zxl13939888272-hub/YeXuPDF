@@ -39,7 +39,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
     // The bundled ML Kit engine is supplied by the app's play / foss builds (OcrServiceImpl's
-    // `primary`); this module stays free software so the F-Droid build can use it as is.
+    // `primary`); this module stays free software so the offline build can use it as is.
 
     // Fully open-source (Apache-2.0) offline OCR fallback for devices where the
     // bundled ML Kit model fails to initialize. See THIRD_PARTY_NOTICES.md.

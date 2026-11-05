@@ -89,11 +89,11 @@ class PrivacyBoundaryTest {
     fun manifestsKeepNetworkPermissionScopedAndRemovePhoneIdentity() {
         val mainPermissions = manifestPermissions(File(appDir, "src/main/AndroidManifest.xml"))
         val fossPermissions = manifestPermissions(File(appDir, "src/foss/AndroidManifest.xml"))
-        val fdroidPermissions = manifestPermissions(File(appDir, "src/fdroid/AndroidManifest.xml"))
+        val offlinePermissions = manifestPermissions(File(appDir, "src/fdroid/AndroidManifest.xml"))
 
         assertFalse("The shared manifest must remain offline", "android.permission.INTERNET" in mainPermissions)
         assertTrue("FOSS explicitly enables user-initiated network features", "android.permission.INTERNET" in fossPermissions)
-        assertTrue("F-Droid explicitly enables URL-to-PDF", "android.permission.INTERNET" in fdroidPermissions)
+        assertTrue("Offline build explicitly enables URL-to-PDF", "android.permission.INTERNET" in offlinePermissions)
 
         val mainManifest = File(appDir, "src/main/AndroidManifest.xml").readText()
         assertTrue("READ_PHONE_STATE must be removed from merged manifests", "android.permission.READ_PHONE_STATE" in mainManifest)

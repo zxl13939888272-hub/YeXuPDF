@@ -118,4 +118,5 @@ jobs:
             --verify-tag \
             --title "$title" \
             --notes-file "$notes" \
-            release-apks/*.apk
+            release-apks/*.apk \
+            release-apks/*.apk.sha256

@@ -64,6 +64,15 @@ jobs:
           test -s "$apk"
           mv "$apk" "app/build/outputs/apk/offline/release/YeXuPDF-v${version}-offline-arm64.apk"
 
+      - name: Create APK checksum
+        if: startsWith(github.ref, 'refs/tags/v')
+        working-directory: app/build/outputs/apk/offline/release
+        run: |
+          set -euo pipefail
+          apk="$(find . -maxdepth 1 -name 'YeXuPDF-v*-offline-arm64.apk' -print -quit)"
+          test -n "$apk"
+          sha256sum "${apk#./}" > "${apk#./}.sha256"
+
       - name: Upload CI APK artifacts
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         uses: actions/upload-artifact@v4
@@ -77,7 +86,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: yexupdf-release-apk
-          path: app/build/outputs/apk/offline/release/YeXuPDF-v*.apk
+          path: |
+            app/build/outputs/apk/offline/release/YeXuPDF-v*.apk
+            app/build/outputs/apk/offline/release/YeXuPDF-v*.apk.sha256
           if-no-files-found: error
 
   publish:

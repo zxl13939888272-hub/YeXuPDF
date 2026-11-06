@@ -8,7 +8,7 @@
 
 </div>
 
-> 当前状态：开发中。仓库尚未发布正式签名版本，调试 APK 仅用于阶段验收。
+> 当前状态：`v0.1.0` 发布候选版。正式签名 APK 已完成本地构建、签名与对齐校验；GitHub Release 和签名版真机安装仍待发布前验收。
 
 ## 项目目标
 
@@ -59,6 +59,14 @@
 
 APK 位于 `app/build/outputs/apk/<flavor>/debug/`。
 
+正式版使用项目所有者自己的长期发布密钥签名。首次配置可在 Windows PowerShell 中运行：
+
+```powershell
+.\scripts\setup-release-signing.ps1
+```
+
+脚本生成的 `.signing/` 与 `key.properties` 已被 Git 忽略。发布密钥和密码必须分别安全备份；任何一项丢失都会导致以后生成的 APK 无法覆盖安装现有版本。
+
 `offline` 构建面向 Android 7.0+ 的 arm64 手机。构建时 Gradle 会取得固定版本的 LibreOfficeKit 并校验哈希；国内或隔离网络构建可提前准备该文件：
 
 ```bash
@@ -80,6 +88,16 @@ Windows 工程路径包含中文时，部分 Gradle 测试子进程可能无法�
 | `backdrop/` | 液态玻璃背景效果 |
 | `office_engine/` | 可选 Office 引擎的 Play 动态模块 |
 
+## 发布包核验
+
+推荐从本项目的 GitHub Releases 下载名称形如 `YeXuPDF-v0.1.0-offline-arm64.apk` 的文件。每个正式版本同时提供 `.sha256` 校验文件。
+
+`v0.1.0` 及后续版本应使用以下证书指纹签名：
+
+```text
+SHA-256: 12CE35615F0C47D40B5F450612D1377BD0717859053A647B73242979E6FF3873
+```
+
 ## 来源与许可证
 
 页序 PDF 基于 [Chethan616/ClearPDF](https://github.com/Chethan616/ClearPDF) 修改，分叉基线为 ClearPDF 2.2.2、提交 `d9a6adc5c634652638628634001835c6678cc606`。
@@ -88,4 +106,4 @@ Windows 工程路径包含中文时，部分 Gradle 测试子进程可能无法�
 
 ## English summary
 
-YeXuPDF is a work-in-progress, local-first Android PDF and document toolbox derived from ClearPDF. Its target distribution works without Google Play Services and keeps document processing on-device. See [PRIVACY.md](PRIVACY.md) for the exact network boundary.
+YeXuPDF is a local-first Android PDF and document toolbox derived from ClearPDF. Its recommended distribution works without Google Play Services and keeps document processing on-device. See [PRIVACY.md](PRIVACY.md) for the exact network boundary.

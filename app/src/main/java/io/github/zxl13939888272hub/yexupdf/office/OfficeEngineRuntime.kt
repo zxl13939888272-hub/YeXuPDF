@@ -121,7 +121,8 @@ internal object OfficeEngineRuntime {
                 )
             try {
                 output.delete()
-                document.saveAs(Uri.fromFile(output).toString(), "pdf", null)
+                // LibreOffice's Android JNI wrapper dereferences this argument unconditionally.
+                document.saveAs(Uri.fromFile(output).toString(), "pdf", "")
             } finally {
                 document.destroy()
             }

@@ -371,6 +371,7 @@
     <string name="language_italian">Italian</string>
     <string name="language_russian">Russian</string>
     <string name="language_arabic">Arabic</string>
+    <string name="language_chinese_simplified">Chinese (Simplified)</string>
     <string name="recents_open">Open</string>
     <string name="recents_share">Share</string>
     <string name="recents_details">Details</string>

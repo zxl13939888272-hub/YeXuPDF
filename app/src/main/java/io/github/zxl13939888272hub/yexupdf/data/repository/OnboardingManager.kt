@@ -2,6 +2,7 @@ package io.github.zxl13939888272hub.yexupdf.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences
+import java.util.Locale
 
 /**
  * Manages onboarding state: first-launch detection and locale preference.
@@ -103,7 +104,18 @@ object OnboardingManager {
         prefs(context).edit().putBoolean(KEY_SPREADSHEET_READER_TOUR_SEEN, true).apply()
 
     fun getSelectedLocale(context: Context): String =
-        prefs(context).getString(KEY_LOCALE, "en") ?: "en"
+        prefs(context).getString(KEY_LOCALE, null) ?: defaultLocaleTag()
+
+    /** Uses a supported app locale on first launch, without overriding an explicit user choice. */
+    internal fun defaultLocaleTag(locale: Locale = Locale.getDefault()): String = when {
+        locale.language.equals("pt", ignoreCase = true) -> "pt-BR"
+        locale.language.equals("es", ignoreCase = true) -> "es"
+        locale.language.equals("it", ignoreCase = true) -> "it"
+        locale.language.equals("ru", ignoreCase = true) -> "ru"
+        locale.language.equals("ar", ignoreCase = true) -> "ar"
+        locale.language.equals("zh", ignoreCase = true) -> "zh-CN"
+        else -> "en"
+    }
 
     fun setSelectedLocale(context: Context, languageTag: String) =
         prefs(context).edit().putString(KEY_LOCALE, languageTag).apply()

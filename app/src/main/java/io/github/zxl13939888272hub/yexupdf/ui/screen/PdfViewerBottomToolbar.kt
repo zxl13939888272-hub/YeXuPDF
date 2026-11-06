@@ -58,6 +58,7 @@ import androidx.compose.material.icons.rounded.Gesture
 import androidx.compose.material.icons.rounded.RadioButtonUnchecked
 import androidx.compose.material.icons.rounded.Remove
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Save
 import androidx.compose.material.icons.rounded.Slideshow
 import androidx.compose.material.icons.rounded.SwapHoriz
 import androidx.compose.material.icons.rounded.SwapVert
@@ -740,6 +741,7 @@ internal fun PdfViewerBottomToolbar(
         // ── Reader actions: editor, auto-scroll, speed, and ShareMorph share one bottom row.
         // Each control takes its own ink from what is behind it; the bar's [fg] is the fallback.
         val editorInk = rememberAdaptiveInk(fg)
+        val saveInk = rememberAdaptiveInk(fg)
         val autoScrollInk = rememberAdaptiveInk(fg)
         val speedInk = rememberAdaptiveInk(fg)
         AnimatedVisibility(
@@ -767,6 +769,23 @@ internal fun PdfViewerBottomToolbar(
                         surfaceColor = if (!editorOpen && (readerTourStep == 0 || readerTourStep == 2)) LiquidGlassColors.Blue.copy(alpha = 0.22f) else Color.Unspecified
                     ) {
                         Icon(Icons.Rounded.Edit, stringResource(R.string.viewer_editor_tools), Modifier.size(20.dp), if (editorOpen) Color.White else editorInk.color)
+                    }
+                }
+                if (hasEdits && !isExporting) {
+                    Box(Modifier.size(ReaderControlSize), contentAlignment = Alignment.Center) {
+                        LiquidIconButton(
+                            onClick = onShowSaveDialog,
+                            backdrop = backdrop,
+                            modifier = saveInk.modifier.size(ReaderControlSize),
+                            tint = LiquidGlassColors.Blue
+                        ) {
+                            Icon(
+                                Icons.Rounded.Save,
+                                stringResource(R.string.viewer_save_edits),
+                                Modifier.size(20.dp),
+                                Color.White
+                            )
+                        }
                     }
                 }
                 Box(Modifier.size(ReaderControlSize), contentAlignment = Alignment.Center) {

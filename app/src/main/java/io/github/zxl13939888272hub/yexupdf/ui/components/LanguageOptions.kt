@@ -6,7 +6,7 @@ import io.github.zxl13939888272hub.yexupdf.R
 import io.github.zxl13939888272hub.yexupdf.ui.utils.LocaleHelper
 
 /** The app's UI languages, in order, keyed by the tags [LocaleHelper.normalizeForUi] produces. */
-val AppLanguageTags = listOf("en", "pt-BR", "es", "it", "ru", "ar")
+val AppLanguageTags = listOf("en", "pt-BR", "es", "it", "ru", "ar", "zh-CN")
 
 /**
  * [AppLanguageTags] as dropdown rows, iOS-style: the name in the current UI language, with the
@@ -21,7 +21,8 @@ fun rememberLanguageOptions(): List<GlassDropdownOption<String>> {
         stringResource(R.string.language_spanish),
         stringResource(R.string.language_italian),
         stringResource(R.string.language_russian),
-        stringResource(R.string.language_arabic)
+        stringResource(R.string.language_arabic),
+        stringResource(R.string.language_chinese_simplified)
     )
     return AppLanguageTags.mapIndexed { i, tag ->
         val native = LocaleHelper.getLanguageDisplayName(tag)

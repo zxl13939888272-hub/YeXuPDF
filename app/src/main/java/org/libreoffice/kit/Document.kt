@@ -23,8 +23,13 @@ class Document(
 
     external fun getDocumentTypeNative(): Int
 
-    /** Saves to [url] (a file:// URL) in [format] (e.g. "pdf"), with optional filter options. */
-    external fun saveAs(url: String, format: String, options: String?)
+    /**
+     * Saves to [url] (a file:// URL) in [format] (e.g. "pdf").
+     *
+     * The bundled JNI bridge calls `GetStringUTFChars` for every argument and therefore cannot
+     * accept a null options value, even when no filter options are needed.
+     */
+    external fun saveAs(url: String, format: String, options: String)
 
     /** Invoked from native code by name ("messageRetrieved", (ILjava/lang/String;)V). */
     @Suppress("unused", "UNUSED_PARAMETER")
